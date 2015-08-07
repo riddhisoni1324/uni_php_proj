@@ -10,7 +10,7 @@ if(isset($_POST['prn']) && isset($_POST['email_id']) && isset($_POST['phone_no']
 	echo "<br>";echo "email is: ".$email_id;
 	echo "<br>";echo "phone no is:  ".$phone_no;
 	echo "<br>";echo "birth_date is:  ".$birth_date;echo "<br>";
-	
+
     // no empty field check
 	if (!empty($_POST['prn']) && !empty($_POST['email_id']) && !empty($_POST['phone_no']) && !empty($_POST['birth_date'])){
 		// if all field has value check detail with "uni_master_detail" table 
@@ -63,24 +63,109 @@ else{
 
 
 
-<form action="index.php" method="POST">
-
-PRN:<input type="number" name="prn"><br><br>
-E-mail:<input type="email" name="email_id"><br><br>
-Phone number:<input type="text" maxlength="10" name="phone_no"><br><br>
-Bdate:<input type="date"  name="birth_date"><br><br>
-<input type="checkbox" name="vehicle" value="Bike"> I accept terms and condition<br><br>
-
-<input type="submit"  value="submit">
 
 
+<html>
+<head>
+    <!-- Define some CSS -->
+  <style type="text/css">
+    .label {width:150px;text-align:right;float:left;padding-right:10px;font-weight:bold;}
+    #form1 label.error, .output {color:#FB3A3A;font-weight:bold;}
+    .inputForm{
+      border-radius:5px;
+      width: 200px;
+      height: 25px;
+      margin-bottom: 10px;
+      -moz-border-radius:5px;
+      -webkit-border-radius:5px;
+   }
+  </style>
+  
+  <!-- Load jQuery and the validate plugin -->
+<script type="text/javascript" src="jquery-1.4.1.min.js"></script>
+<script type="text/javascript" src="jquery-validate.js"></script>
+
+  
+  <!-- jQuery Form Validation code -->
+  <script>
+  
+  // When the browser is ready...
+  $(function() {
+
+  	var checker=document.getElementById("checkbox");
+  	var submit=document.getElementById("submit");
+
+  	checker.onchange=function(){
+  		if(this.checked){
+  			submit.disabled=false;
+  		}
+  		else{
+  		    submit.disabled=true;
+  		}
+  	}
+  
+    // Setup form validation on the #register-form element
+    $("#form1").validate({
+    
+        // Specify the validation rules
+        rules: {
+           prn: {
+                required: true,
+                minlength: 16,
+               
+            },
+            email_id: {
+                required: true,
+                email: true
+            },
+            phone_no: {
+                required: true,
+                minlength: 10
+            },
+            birth_date: {
+                required: true,
+             }
+        },
+        
+        // Specify the validation error messages
+        messages: {
+            prn: {
+                required: "Please provide a PRN",
+                minlength: "Your PRN must be at least 16 characters long",
+               
+            }, 
+            email_id: "Please enter a valid email address",
+            phone_no: {
+                required: "Please provide a password",
+                minlength: "Your phone no must be at least 10 characters long"
+            },           
+            birth_date: {
+                required: "Please provide a Birthdate",
+                }
+        },
+        
+        submitHandler: function(form) {
+            form.submit();
+        }
+    });
+
+  });
+  
+  </script>
+</head>
+<body>
+  
+  <!--  The form that will be parsed by jQuery before submit  -->
+<form action="index.php" method="POST" id="form1">
+
+	 <div class="label">PRN</div><input type="text" id="prn" name="prn" class="inputForm" placeholder="e.g. 2012033800088965"/><br />
+    <div class="label">Email</div><input type="text" id="email_id" name="email_id" class="inputForm" placeholder="e.g. riddhisoni@gmail.com"/><br />
+    <div class="label">Phone Number</div><input type="text" id="phone_no" name="phone_no" class="inputForm" placeholder="e.g. 9408344653"/><br />
+    <div class="label">Birthdate</div><input type="date" id="birth_date"  name="birth_date" class="inputForm" placeholder="05-Aug-1990"><br />
+    <div class="label"><input type="checkbox" name="" value="" id="checkbox"></div> I have Accept all Terms & Conditions<br /><br /><br />
+    <div style="margin-left:140px;"><input type="submit" name="submit" value="Submit" class="inputForm" id="submit" disabled/></div>
 
 </form>
-
-
-
-
-
- 
-
-
+  
+</body>
+</html>
