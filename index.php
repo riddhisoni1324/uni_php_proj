@@ -11,43 +11,60 @@ if(isset($_POST['prn']) && isset($_POST['email_id']) && isset($_POST['phone_no']
 	echo "<br>";echo "phone no is:  ".$phone_no;
 	echo "<br>";echo "birth_date is:  ".$birth_date;echo "<br>";
 
-    // no empty field check
+  // no empty field check
 	if (!empty($_POST['prn']) && !empty($_POST['email_id']) && !empty($_POST['phone_no']) && !empty($_POST['birth_date'])){
 		// if all field has value check detail with "uni_master_detail" table 
-		$check="SELECT * FROM uni_master_detail WHERE prn=$prn";
-			    if($check_run=mysql_query($check)){
-				        //if detail is match then count number of rows query return
-						$num_row = mysql_num_rows(mysql_query($check));
-                        echo "tot no of row returned is ".$num_row;
-                        //if one and only one row is returned then and then enter form detail in our temporary table "uni_current_detail"
-						if($num_row==1){
-								while($query_row = mysql_fetch_assoc($check_run)){
-									$mail=$query_row['email_id'];
-									echo "<br>";echo "mail from curent ".$mail;echo "<br>";
-									$query = "INSERT INTO `uni_current_detail` VALUES ($prn,'$email_id',$phone_no,'$birth_date')";
-									if($query_run = mysql_query($query)){
-										echo "query run is in current ".$query_run;
-										echo "<br>";
-										echo "entered detail in current table";
-										echo "<br>";
-									}
-									else{die(mysql_error());}
-								}
-						}
-						/*if detail doesn't match with master table or [multiple row return-this will never happen in ideal case] then enter that 
-						form data into "uni_pending_detail" table */
-						else{
-						echo "information not match";
-						echo "<br>";
-						$query = "INSERT INTO `uni_pending_detail` VALUES ($prn,'$email_id',$phone_no,'$birth_date')";
-							if($query_run = mysql_query($query)){
-								echo "query run is in pending ".$query_run;
-								echo "<br>";
-								echo "entered detail in pending table";
-								echo "<br>";
-							}
-							else{die(mysql_error());}
-						}
+       $check_data="SELECT * FROM uni_current_detail WHERE prn=$prn";
+       $num_row_data = mysql_num_rows(mysql_query($check_data));
+       echo "num row data ...".$num_row_data;
+		   $check="SELECT * FROM uni_master_detail WHERE prn=$prn";
+
+    			    if($check_run=mysql_query($check)){
+    				    //if detail is match then count number of rows query return
+    						$num_row = mysql_num_rows(mysql_query($check));
+                // echo "tot no of row returned is ".$num_row;
+                //if one and only one row is returned then and then enter form detail in our temporary table "uni_current_detail"
+    						if($num_row==1){
+    								while($query_row = mysql_fetch_assoc($check_run)){
+    									$mail=$query_row['email_id'];
+    									echo "<br>";echo "mail from curent ".$mail;echo "<br>";
+                        if($num_row_data == 0){
+        									$query = "INSERT INTO `uni_current_detail`(prn,email_id,phone_no,birth_date) VALUES ($prn,'$email_id',$phone_no,'$birth_date')";
+        									if($query_run = mysql_query($query)){
+        										echo "entered detail in current table";
+        										echo "<br>";
+        									}
+        									else{die(mysql_error());}
+                        }
+                        else{
+                          print '<script type="text/javascript">'; 
+                          print 'alert("Detail is already Verified")'; 
+                          print '</script>';
+                        }  
+                    }
+    						}
+    						/*if detail doesn't match with master table or [multiple row return-this will never happen in ideal case] then enter that 
+    						form data into "uni_pending_detail" table */
+    						else{
+    						// echo "information not match";
+                $check_data="SELECT * FROM uni_pending_detail WHERE prn=$prn";
+                $num_row_data = mysql_num_rows(mysql_query($check_data));
+                echo "num row data ...".$num_row_data;
+    						echo "<br>";
+                    if($num_row_data == 0){
+                      $query = "INSERT INTO `uni_pending_detail`(prn,email_id,phone_no,birth_date) VALUES ($prn,'$email_id',$phone_no,'$birth_date')";
+          							if($query_run = mysql_query($query)){
+          								echo "entered detail in pending table";
+          								echo "<br>";
+          							}
+          							else{die(mysql_error());}
+                    }
+                    else{
+                          print '<script type="text/javascript">'; 
+                          print 'alert("Detail is already in Pending state")'; 
+                          print '</script>';
+                    }
+    						}
 				}//end of if all field has value check detail with "uni_master_detail" table if
 				else{echo mysql_error();}
 
@@ -61,111 +78,3 @@ else{
 
 ?>
 
-
-
-
-
-<html>
-<head>
-    <!-- Define some CSS -->
-  <style type="text/css">
-    .label {width:150px;text-align:right;float:left;padding-right:10px;font-weight:bold;}
-    #form1 label.error, .output {color:#FB3A3A;font-weight:bold;}
-    .inputForm{
-      border-radius:5px;
-      width: 200px;
-      height: 25px;
-      margin-bottom: 10px;
-      -moz-border-radius:5px;
-      -webkit-border-radius:5px;
-   }
-  </style>
-  
-  <!-- Load jQuery and the validate plugin -->
-<script type="text/javascript" src="jquery-1.4.1.min.js"></script>
-<script type="text/javascript" src="jquery-validate.js"></script>
-
-  
-  <!-- jQuery Form Validation code -->
-  <script>
-  
-  // When the browser is ready...
-  $(function() {
-
-  	var checker=document.getElementById("checkbox");
-  	var submit=document.getElementById("submit");
-
-  	checker.onchange=function(){
-  		if(this.checked){
-  			submit.disabled=false;
-  		}
-  		else{
-  		    submit.disabled=true;
-  		}
-  	}
-  
-    // Setup form validation on the #register-form element
-    $("#form1").validate({
-    
-        // Specify the validation rules
-        rules: {
-           prn: {
-                required: true,
-                minlength: 16,
-               
-            },
-            email_id: {
-                required: true,
-                email: true
-            },
-            phone_no: {
-                required: true,
-                minlength: 10
-            },
-            birth_date: {
-                required: true,
-             }
-        },
-        
-        // Specify the validation error messages
-        messages: {
-            prn: {
-                required: "Please provide a PRN",
-                minlength: "Your PRN must be at least 16 characters long",
-               
-            }, 
-            email_id: "Please enter a valid email address",
-            phone_no: {
-                required: "Please provide a password",
-                minlength: "Your phone no must be at least 10 characters long"
-            },           
-            birth_date: {
-                required: "Please provide a Birthdate",
-                }
-        },
-        
-        submitHandler: function(form) {
-            form.submit();
-        }
-    });
-
-  });
-  
-  </script>
-</head>
-<body>
-  
-  <!--  The form that will be parsed by jQuery before submit  -->
-<form action="index.php" method="POST" id="form1">
-
-	 <div class="label">PRN</div><input type="text" id="prn" name="prn" class="inputForm" placeholder="e.g. 2012033800088965"/><br />
-    <div class="label">Email</div><input type="text" id="email_id" name="email_id" class="inputForm" placeholder="e.g. riddhisoni@gmail.com"/><br />
-    <div class="label">Phone Number</div><input type="text" id="phone_no" name="phone_no" class="inputForm" placeholder="e.g. 9408344653"/><br />
-    <div class="label">Birthdate</div><input type="date" id="birth_date"  name="birth_date" class="inputForm" placeholder="05-Aug-1990"><br />
-    <div class="label"><input type="checkbox" name="" value="" id="checkbox"></div> I have Accept all Terms & Conditions<br /><br /><br />
-    <div style="margin-left:140px;"><input type="submit" name="submit" value="Submit" class="inputForm" id="submit" disabled/></div>
-
-</form>
-  
-</body>
-</html>

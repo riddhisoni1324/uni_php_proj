@@ -12,6 +12,6 @@ die(mysql_error());
 }
 else
 {
-	echo "connection done!!!!!1";
+	// echo "connection done!!!!!";
 }
 ?>
