@@ -12,28 +12,28 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
   $check_data=''; $check=''; $insert='';
   switch ($user_type) {
        case "1":
-            $check="SELECT * FROM uni_student_master_detail WHERE prn=$prn and birth_date='$birth_date'";
-            $check_data="SELECT * FROM uni_student_current_detail WHERE prn=$prn and birth_date='$birth_date'";
-            $insert="INSERT INTO `uni_student_current_detail`(prn,email_id,phone_no,birth_date) VALUES ($prn,'$email_id',$phone_no,'$birth_date')";
-            $pending="INSERT INTO `uni_pending_detail`(prn,email_id,phone_no,birth_date,user_type) VALUES ($prn,'$email_id',$phone_no,'$birth_date',$user_type)";
+            $check="SELECT * FROM Student_Master WHERE prn=$prn and birth_date='$birth_date'";
+            $check_data="SELECT * FROM Student_Reg WHERE prn=$prn and birth_date='$birth_date'";
+            $insert="INSERT INTO `Student_Reg`(prn,email_id,phone_no,birth_date) VALUES ($prn,'$email_id',$phone_no,'$birth_date')";
+            $pending="INSERT INTO `Pending_Reg`(prn,email_id,phone_no,birth_date,user_type) VALUES ($prn,'$email_id',$phone_no,'$birth_date',$user_type)";
             break;
        case "2":
-           $check="SELECT * FROM uni_employee_master_detail WHERE emp_id=$emp_id";
-           $check_data="SELECT * FROM uni_permenent_employee_current_detail WHERE emp_id=$emp_id";
-           $insert="INSERT INTO `uni_permenent_employee_current_detail`(emp_id,email_id,phone_no,birth_date) VALUES ($emp_id,'$email_id',$phone_no,'$birth_date')";
-           $pending="INSERT INTO `uni_pending_detail`(emp_id,email_id,phone_no,birth_date,user_type) VALUES ($emp_id,'$email_id',$phone_no,'$birth_date',$user_type)";
+           $check="SELECT * FROM Emp_Master WHERE emp_id=$emp_id";
+           $check_data="SELECT * FROM Emp_Reg WHERE emp_id=$emp_id";
+           $insert="INSERT INTO `Emp_Reg`(emp_id,email_id,phone_no,birth_date) VALUES ($emp_id,'$email_id',$phone_no,'$birth_date')";
+           $pending="INSERT INTO `Pending_Reg`(emp_id,email_id,phone_no,birth_date,user_type) VALUES ($emp_id,'$email_id',$phone_no,'$birth_date',$user_type)";
            break;
        case "3":
-           $check="SELECT * FROM uni_employee_master_detail WHERE phone_no=$phone_no";
-           $check_data="SELECT * FROM uni_temporary_employee_current_detail WHERE phone_no=$phone_no";
-           $insert="INSERT INTO `uni_temporary_employee_current_detail`(email_id,phone_no,birth_date) VALUES ('$email_id',$phone_no,'$birth_date')";
-           $pending="INSERT INTO `uni_pending_detail`(email_id,phone_no,birth_date,user_type) VALUES ('$email_id',$phone_no,'$birth_date',$user_type)";
+           $check="SELECT * FROM  Temp_Master WHERE phone_no=$phone_no";
+           $check_data="SELECT * FROM  Temp_Reg WHERE phone_no=$phone_no";
+           $insert="INSERT INTO `Temp_Reg`(email_id,phone_no,birth_date) VALUES ('$email_id',$phone_no,'$birth_date')";
+           $pending="INSERT INTO `Pending_Reg`(email_id,phone_no,birth_date,user_type) VALUES ('$email_id',$phone_no,'$birth_date',$user_type)";
            break;
        case "4":
-           $check="SELECT * FROM uni_other_master_detail WHERE phone_no=$phone_no";
-           $check_data="SELECT * FROM uni_other_current_detail WHERE phone_no=$phone_no";
-           $insert="INSERT INTO `uni_other_current_detail`(email_id,phone_no,birth_date) VALUES ('$email_id',$phone_no,'$birth_date')";
-           $pending="INSERT INTO `uni_pending_detail`(email_id,phone_no,birth_date,user_type) VALUES ('$email_id',$phone_no,'$birth_date',$user_type)";
+           $check="SELECT * FROM Other_Master WHERE phone_no=$phone_no";
+           $check_data="SELECT * FROM Other_Reg WHERE phone_no=$phone_no";
+           $insert="INSERT INTO `Other_Reg`(email_id,phone_no,birth_date) VALUES ('$email_id',$phone_no,'$birth_date')";
+           $pending="INSERT INTO `Pending_Reg`(email_id,phone_no,birth_date,user_type) VALUES ('$email_id',$phone_no,'$birth_date',$user_type)";
            break; 
   }/*
   echo "<br>";echo "prn is: ".$prn;
@@ -58,7 +58,7 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
                           $query = $insert;
                           if($query_run = mysql_query($query)){
                             print '<script type="text/javascript">'; 
-                            print 'alert("Succseesfully Detail is Entered")'; 
+                            print 'alert("Detail is Saved Succseesfully.")'; 
                             print '</script>';
                             // echo "enter detail in current";
                           }
@@ -66,7 +66,7 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
                         }
                         else{
                           print '<script type="text/javascript">'; 
-                          print 'alert("Detail is already Verified")'; 
+                          print 'alert("Detail is already Verified.")'; 
                           print '</script>';
                           // echo "detail is already Verified";
                         }  
@@ -82,7 +82,7 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
                       $query = $pending;
                         if($query_run = mysql_query($query)){
                           print '<script type="text/javascript">'; 
-                          print 'alert("Detail is Entered For Pending State")'; 
+                          print 'alert("We are unable to Verify the Details Entered. \nSo Registration is in Pending State. \nWe will let you know once it gets verified.")'; 
                           print '</script>';
                           // echo "detail is pending";
                         }
@@ -90,7 +90,7 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
                     }
                     else{
                           print '<script type="text/javascript">'; 
-                          print 'alert("Detail is Already in Pending state")'; 
+                          print 'alert("Detail is Already in Pending state.")'; 
                           print '</script>';
                           // echo "detail is already in pending state";
                     }
@@ -103,6 +103,10 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
 
 <html>
 <head>
+
+
+<!--<img src="http://msubaroda.ac.in/images/no_banner.png" width="1000px" height="350px" border="0px"> -->
+
     <!-- Define some CSS -->
   <style type="text/css">
     .label {width:150px;text-align:right;float:left;padding-right:10px;font-weight:bold;}
@@ -121,7 +125,6 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
 <script type="text/javascript" src="jquery-1.4.1.min.js"></script>
 <script type="text/javascript" src="jquery-validate.js"></script>
 
-  
   <!-- jQuery Form Validation code -->
   <script>
   
@@ -233,30 +236,30 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
         // Specify the validation error messages
         messages: {
             prn: {
-                required: "Please provide a PRN",
-                minlength: "Your PRN must be at least 16 characters long",
+                required: "Please provide a PRN.",
+                minlength: "PRN must be at least 16 characters long.",
                
             }, 
-            email_id: "Please provide a valid email address",
+            email_id: "Please provide a valid Email address.",
             phone_no: {
-                required: "Please provide a Phone no",
-                minlength: "Your phone no must be at least 10 characters long",
-                number: "Please Enter valid number"
+                required: "Please provide a Mobile Number.",
+                minlength: "Your Mobile Number must be at least 10 digit long.",
+                number: "Please Enter a valid Number."
             },           
             birth_date: {
-                required: "Please provide a Birthdate",
+                required: "Please provide Birthdate.",
             },
             user_type:{
-              required: "Please provide User Type"
+              required: "Please provide User Type."
             },
             emp_id:{
-              required: "Please provide a Employee Id"
+              required: "Please provide Employee Id."
             }
         },
         
         submitHandler: function(form) {
              
-             if(confirm('Please Check Again All Information..Modification is not permissible \n Press Ok to submit Form \n Press Cancel to Verify Or Check Detail')){
+             if(confirm('Please Check All the Information entered. Modification is not allowed once saved. \n Press Ok to submit Form \n Press Cancel to Verify Or Check Details again.')){
              $("#user_type").removeAttr("disabled");
              form.submit();
              }
@@ -272,7 +275,7 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
   <!--  The form that will be parsed by jQuery before submit  -->
 <form action="index.php" method="POST" id="form1">
 
-    <div style="margin-left:100px; padding-top:20px;"><h2><u>Wi-Fi Registration Form</u></h2></div><br />
+    <div style="margin-left:100px; padding-top:5px;"><h2><u>Wi-Fi Registration Form</u></h2></div><br />
     <div class="label" id="user_type_t">User Type:</div>
     <select name="user_type" id="user_type" class="inputForm">
     <option value="">Choose...</option>
@@ -285,7 +288,7 @@ if(isset($_POST['email_id']) && isset($_POST['phone_no']) && isset($_POST['birth
     <div class="label" id="emp_id_t">Employee Id :</div><input type="text" id="emp_id" name="emp_id" class="inputForm" placeholder="e.g. 12" /></br>
    
     <div class="label">Email :</div><input type="text" id="email_id" name="email_id" class="inputForm" placeholder="e.g. riddhisoni@gmail.com"/><br />
-    <div class="label">Phone Number :</div><input type="text" id="phone_no" name="phone_no" class="inputForm" placeholder="e.g. 9408344653" maxlength="10"/><br />
+    <div class="label">Mobile Number :</div><input type="text" id="phone_no" name="phone_no" class="inputForm" placeholder="e.g. 9408344653" maxlength="10"/><br />
     <div class="label">Birthdate :</div><input type="date" id="birth_date"  name="birth_date" class="inputForm" placeholder="05-Aug-1990"><br />
    
     
